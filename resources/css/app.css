@@ -1,0 +1,215 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+body {
+	font-family: Arial, sans-serif;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.card {
+	border-radius: 15px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	
+}
+
+.card-header {
+	background-color: #ff9100;
+	color: white;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+}
+
+.btn-primary {
+	background-color: #007bff;
+	border-color: #007bff;
+	transition: background-color 0.3s ease;
+	width: 100%;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+	border-color: #0056b3;
+}
+
+.form-control:focus {
+	border-color: #007bff;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.footer-text {
+	color: #6c757d;
+}
+
+.social-icons {
+	margin: 10px 0;
+}
+
+.social-icons a {
+	margin: 0 5px;
+	font-size: 20px;
+	color: #007bff;
+}
+
+.form-group label {
+	display: block;
+	text-align: left;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.form-group .required {
+	color: red;
+	margin-left: 5px;
+}
+
+.forgot-password {
+	text-align: right;
+	margin-bottom: 20px;
+	font-size: 15px;
+	text-decoration: none;
+}
+
+button[type="submit"] {
+	width: 100%;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+	width: 100%;
+}
+
+
+.captcha-field input {
+	flex-grow: 1;
+	margin-left: 10px;
+}
+
+.captcha-refresh {
+	font-size: 20px;
+	color: #007bff;
+	cursor: pointer;
+	margin-left: 10px;
+}
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #343a40;
+    padding-top: 20px;
+}
+
+.sidebar .sidebar-header {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.sidebar .sidebar-brand {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.sidebar .nav {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar .nav-item {
+    padding: 10px 20px;
+}
+
+.sidebar .nav-link {
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+.bg-danger {
+	background-color: #ff3ca6 !important;
+  }
+.sidebar .nav-link:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: #495057;
+}
+
+.sidebar-footer .nav-link {
+    color: white;
+}
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #343a40;
+    padding-top: 20px;
+}
+
+.sidebar .sidebar-header {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.sidebar .sidebar-brand {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.sidebar .nav {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar .nav-item {
+    padding: 10px 20px;
+}
+
+.sidebar .nav-link {
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: #495057;
+}
+
+.sidebar-footer .nav-link {
+    color: white;
+}
