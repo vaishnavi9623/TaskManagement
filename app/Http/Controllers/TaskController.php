@@ -9,20 +9,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TaskController extends Controller
 {
-   // public function index($status=NULL)
-   // {
-      //   if($status)
-      //   {$tasks = Task::where('status',$status)->get();}
-   //    //   else{$tasks = Task::all();}
-   //    //   return view('task', compact('tasks'));
-      
-   // }
-
+  
    public function index(Request $request, $status = null)
-{
+    {
    
     if ($request->ajax()) {
-      //dd($status);
       if($status){$tasks = Task::where('status',$status)->get();}
       else{$tasks = Task::all();}
          return DataTables::of($tasks)
@@ -39,6 +30,44 @@ class TaskController extends Controller
             ->make(true);
     }
 
-    return view('task');
-}
+    return view('Task/task');
+    }
+
+    public function addnewtask(Request $request)
+    {
+        try {
+            $validate = $request->validate([
+                'title' => 'required|string',
+                'description' => 'required|string',
+                'starttime' => 'required|date',
+                'endtime' => 'required|date',
+                'deadline' => 'required|date',
+                'status' => 'required|string|in:pending,completed,inprogress,overdue,upcoming',
+                'category' => 'required|string|in:development,design,testing',
+                'priority' => 'required|string|in:low,medium,high',
+                'recurring_task' => 'required|string',
+                'assign_to' => 'required',
+
+            ]);
+            Task::create([
+                'name'=>$validate['title'],
+                'description'=>$validate['description'],
+                'starttime'=>$validate['starttime'],
+                'endtime'=>$validate['endtime'],
+                'deadline'=>$validate['deadline'],
+                'status'=>$validate['status'],
+                'category'=>$validate['category'],
+                'priority'=>$validate['priority'],
+                'assign_to'=>$validate['assign_to'],
+
+                'recurring_task'=>$validate['recurring_task']
+            ]);
+            return redirect()->route('task')->with('success', 'Task added successfully!');
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());  // If there's an error, it will show here
+        }
+        
+
+    }
 }

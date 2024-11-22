@@ -42,7 +42,15 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            // Add more users as needed
+            [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'password' => md5('123456789'), 
+                'email_verified_at' => now(), 
+                'remember_token' => Str::random(10), 
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

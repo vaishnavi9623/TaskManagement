@@ -13,6 +13,6 @@ class Task extends Model
     protected $table = 'task';
 
     protected $fillable = [
-        'name', 'assign_to', 'description', 'starttime','endtime','status' 
+        'name', 'assign_to', 'description', 'starttime','endtime','status','category','priority','deadline','recurring_task'
     ];
 }

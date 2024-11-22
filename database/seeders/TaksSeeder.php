@@ -22,7 +22,12 @@ class TaksSeeder extends Seeder
                 'starttime' => now(),
                 'endtime' => now()->addHours(1),
                 'status' => 'pending',
-                'assign_to' => 1, // Ensure the user with ID 1 exists
+                'assign_to' => 1,
+                'category' => 'Deployment',
+                'priority' => 'Critical',
+                'attachment' => 'deployment_guide.pdf',
+                'deadline' => '2024-12-10',
+                'recurring_task' => 'none', // Set to none for a non-recurring task
             ],
             [
                 'name' => 'Task ' . Str::random(5),
@@ -30,7 +35,12 @@ class TaksSeeder extends Seeder
                 'starttime' => now(),
                 'endtime' => now()->addHours(2),
                 'status' => 'completed',
-                'assign_to' => 2, // Ensure the user with ID 2 exists
+                'assign_to' => 2, 
+                'category' => 'Development',
+                'priority' => 'High',
+                'attachment' => 'design_doc.pdf',
+                'deadline' => '2024-12-01',
+                'recurring_task' => 'daily', 
             ],
             [
                 'name' => 'Task ' . Str::random(5),
@@ -38,7 +48,12 @@ class TaksSeeder extends Seeder
                 'starttime' => now(),
                 'endtime' => now()->addHours(3),
                 'status' => 'pending',
-                'assign_to' => 3, // Ensure the user with ID 3 exists
+                'assign_to' => 3, 
+                'category' => 'Testing',
+                'priority' => 'Medium',
+                'attachment' => 'test_cases.xlsx',
+                'deadline' => '2024-12-05',
+                'recurring_task' => 'monthly', // Set to monthly
             ],
         ]);
     }
