@@ -7,7 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    
     <style>
         body {
             overflow-x: hidden;
@@ -77,6 +78,15 @@
         .table-bordered th, .table-bordered td {
             border: 1px solid #dee2e6;
         }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
     </style>
 </head>
 <body>
@@ -89,8 +99,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" title="Users">
-                    <i class="fas fa-user"></i> <span class="d-none d-md-inline">Users</span>
+                <a class="nav-link" href="{{ route('user') }}" title="Users">
+                    <i class="fas fa-users"></i> <span class="d-none d-md-inline">Users</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -99,7 +109,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" title="Projects">
+                <a class="nav-link" href="{{ route('project') }}" title="Projects">
                     <i class="fas fa-project-diagram"></i> <span class="d-none d-md-inline">Projects</span>
                 </a>
             </li>
@@ -109,12 +119,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" title="Time Tracking">
+                <a class="nav-link" href="{{route('timetrack')}}" title="Time Tracking">
                     <i class="fas fa-clock"></i> <span class="d-none d-md-inline">Time Tracking</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" title="Calendar">
+                <a class="nav-link" href="{{route('calendar')}}" title="Calendar">
                     <i class="fas fa-calendar-alt"></i> <span class="d-none d-md-inline">Calendar</span>
                 </a>
             </li>
@@ -177,6 +187,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Sidebar Toggle Functionality
@@ -190,7 +202,52 @@
     </script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        themeSystem: 'standard', // Use the default theme
+        events: '/calendar/events', // Replace with your route to fetch events
+        eventColor: '#e67e22', // Default event color (orange)
+        eventTextColor: 'white', // White text on events
+
+    });
+   
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '/calendar/events', // Route for fetching tasks
+        });
+
+        calendar.render();
+
+
+        $('#viewSelector').change(function() {
+    var selectedView = $(this).val();
+    calendar.changeView(selectedView);
+});
+calendar.on('dateClick', function(info) {
+    $('#taskStartDate').val(info.dateStr);  // Set the start date to the clicked date
+    $('#taskModal').modal('open'); // Open the modal
+});
+calendar.on('eventClick', function(info) {
+    const eventDetails = info.event;
+    alert('Task: ' + eventDetails.title + '\nStart: ' + eventDetails.start);
+});
+
+$('#taskSearch').on('input', function() {
+    const query = $(this).val().toLowerCase();
+    // Filter events by title or description
+    const filteredEvents = events.filter(event => event.title.toLowerCase().includes(query));
+    calendar.removeAllEvents();
+    calendar.addEventSource(filteredEvents);
+});
+
+    });
+
+
         $(document).ready(function() {
+            
             // $('#create-task-btn').click(function(){
             //     $('#taskmodel').modal('show');
             // });
@@ -210,15 +267,53 @@
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' },
-                    { data: 'status', name: 'status' },
                     { data: 'category', name: 'category' },
                     { data: 'priority', name: 'priority' },
                     { data: 'deadline', name: 'deadline' },
+                    { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]
             });
 
-            
+            $('#users-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('user') }}',
+                    data: function(d) {}
+                },
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
+                    { data: 'designation', name: 'designation' },
+                 
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ]
+            });
+
+            $('#project-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('project') }}',
+                    data: function(d) {}
+                },
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
+                    { data: 'project_manager', name: 'project_manager' },
+                    { data: 'assigned_team', name: 'assigned_team' },
+
+                    { data: 'start_date', name: 'start_date' },
+                    { data: 'end_date', name: 'end_date' },
+                    { data: 'priority', name: 'priority' },
+                    { data: 'status', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ]
+            });
+
+
         });
         
         
