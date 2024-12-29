@@ -16,12 +16,9 @@ class UserController extends Controller
          return DataTables::of($users)
             ->addColumn('action', function ($row) {
                 return '
-                    <a href="#" class="btn btn-info btn-sm">View</a>
-                    <a href="#" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="#" method="POST" style="display:inline;">
-                        ' . csrf_field() . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this task?\')">Delete</button>
-                    </form>
+                    <a href="#" class="viewUser" data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
+                    <a href="#" ><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" ><i class="fa-solid fa-trash"></i></a>
                 ';
             })
             ->make(true);

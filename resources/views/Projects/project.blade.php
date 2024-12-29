@@ -33,7 +33,7 @@
     </div>
     @endif
     <div class="d-flex justify-content-end mb-2">
-        <a href="#">
+        <a href="{{route('addprojects')}}">
             <button id="create-task-btn" class="btn btn-sm btn-success text-end">
                 <i id="create-task-icon" class="fas fa-plus"></i> Create New Projects
             </button>
