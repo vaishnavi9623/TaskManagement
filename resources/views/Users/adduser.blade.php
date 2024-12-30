@@ -7,7 +7,7 @@
             <div class="card-title mb-4 text-dark p-1 text-center">
                 <h3>Create New Employee</h3><hr>
             </div>
-            <form id="create-employee-form" action="#" enctype="application/x-www-form-urlencoded" method="POST">
+            <form id="create-employee-form" action="{{route('user.save')}}" enctype="application/x-www-form-urlencoded" method="POST">
                 @csrf
                 <!-- Employee Name, Email, and Phone -->
                 <div class="row mb-3">

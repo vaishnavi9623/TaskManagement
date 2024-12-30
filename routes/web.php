@@ -14,17 +14,19 @@ Route::get('/', function () { return view('Auth.login', ['name' => 'Samantha']);
 Route::post('login', [LoginController::class, 'ValidateUser'])->name('login');
 
 //For Dashboard View
-Route::get('/dashboard', function () {return view('Dashboard.dashboard');})->middleware(IsUserLoggedIn::class);
+Route::get('/dashboard', function () {return view('Dashboard.dashboard');})->name('dashboard')->middleware(IsUserLoggedIn::class);
 
 
 
-//For Task Management
+//For Task Management -------------------------------------------------------------------------------------------------
 Route::post('task/save',[TaskController::class,'addnewtask'])->name('task.save');
 Route::get('/task/{status?}', [TaskController::class, 'index'])->name('task')->middleware(IsUserLoggedIn::class);
 Route::get('/addtask', function () {return view('Task.addtask');})->name('addtask')->middleware(IsUserLoggedIn::class);
 
+// for user management ---------------------------------------------------------------------------------------------------------------
 Route::get('/user', [UserController::class, 'index'])->name('user');
 Route::get('/adduser', function () {return view('Users.adduser');})->name('adduser')->middleware(IsUserLoggedIn::class);
+Route::post('user/saveUser',[UserController::class,'saveuser'])->name('user.save');
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('project');
 Route::get('/addprojects', function () {return view('Projects.addprojects');})->name('addprojects')->middleware(IsUserLoggedIn::class);
@@ -43,5 +45,5 @@ Route::get('/reports', function () {return view('Reports.reports');})->name('rep
 
 
 Route::get('/setting-notification', function () {
-    return view('setting.notifications'); // Correct the view path
+    return view('setting.notifications'); 
 })->name('setting.notifications')->middleware(IsUserLoggedIn::class);

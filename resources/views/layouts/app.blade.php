@@ -99,7 +99,7 @@
     <div class="sidebar" id="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="#" title="Dashboard">
+                <a class="nav-link" href="{{route('dashboard')}}" title="Dashboard">
                     <i class="fas fa-tasks"></i> <span class="d-none d-md-inline">Dashboard</span>
                 </a>
             </li>
@@ -176,10 +176,14 @@
             </button>
             
         <!-- Logo or Title -->
-        <a class="navbar-brand ms-3" href="#">
+        <a class="navbar-brand ms-3" href="#" style="font-weight: bold !important; font-size: 20px !important; color: #000 !important; text-decoration: none !important;">
             Task Manager
         </a>
 
+
+        {{-- <a class="navbar-brand ms-3" href="#">
+            <img src="{{ asset('images/logo.png') }}" alt="Task Manager" style="height: 20px;">
+        </a> --}}
         <!-- Search Bar -->
         <form class="d-inline-block ms-auto" style="width: 300px;margin-left:100px;">
             <input class="form-control form-control-sm" style="margin-left:100px;" type="search" placeholder="Search..." aria-label="Search">
@@ -342,7 +346,14 @@
         });
 
     });
-        
+    document.addEventListener('DOMContentLoaded', () => {
+        const successAlert = document.getElementById('success-alert');
+        if (successAlert) {
+            setTimeout(() => {
+                successAlert.remove();
+            }, 3000); // 3000 ms = 3 seconds
+        }
+    });
     </script>
 </body>
 </html>

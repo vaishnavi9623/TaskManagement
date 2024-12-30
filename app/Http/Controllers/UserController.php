@@ -26,4 +26,35 @@ class UserController extends Controller
 
     return view('Users/user');
     }
+
+    public function saveuser(Request $request)
+    {
+            $validate = $request->validate([
+                "name"=>'required|string',
+                "email"=>'required|email',
+                "phone"=>'required',
+                "designation"=>'required',
+                "department"=>'required',
+                "position"=>'required',
+                "status"=>'required',
+                "joining_date"=>'required | date',
+                "photo"=>'required',
+                "address"=>'required'
+            ]);
+
+            User::create([
+                'name'=>$validate['name'],
+                'email'=>$validate['email'],
+                'phone_number'=>$validate['phone'],
+                'designation'=>$validate['designation'],
+                'department'=>$validate['department'],
+                'position'=>$validate['position'],
+                'status'=>$validate['status'],
+                'joining_date'=>$validate['joining_date'],
+                'photo'=>$validate['photo'],
+                'address'=>$validate['address']
+            ]);
+
+            return redirect()->route('user')->with('success', 'User added successfully!');
+    }
 }
