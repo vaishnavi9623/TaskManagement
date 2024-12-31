@@ -27,6 +27,11 @@ Route::get('/addtask', function () {return view('Task.addtask');})->name('addtas
 Route::get('/user', [UserController::class, 'index'])->name('user');
 Route::get('/adduser', function () {return view('Users.adduser');})->name('adduser')->middleware(IsUserLoggedIn::class);
 Route::post('user/saveUser',[UserController::class,'saveuser'])->name('user.save');
+Route::get('/user/getdataforedit/{id}', [UserController::class, 'getdataforedit'])->name('getdataforedit');
+Route::put('/user/update/{id}', [UserController::class, 'updateUser'])->name('user.update');
+Route::delete('/user/deleteuser/{id}', [UserController::class, 'deleteuser'])->name('deleteuser');
+Route::get('/user/{id}', [UserController::class, 'getUserDetails'])->name('getuserdetails');
+
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('project');
 Route::get('/addprojects', function () {return view('Projects.addprojects');})->name('addprojects')->middleware(IsUserLoggedIn::class);

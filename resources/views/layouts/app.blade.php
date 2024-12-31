@@ -222,6 +222,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -241,8 +242,63 @@
             $(document).on('click', '.viewUser', function (e) {
                 e.preventDefault();
                 let userId = $(this).data('id');
-                alert(userId);
                 $('#viewUserModal').modal('show');
+                $.ajax({
+                    url : `user/${userId}`,
+                    type : 'GET',
+                    data: {
+                            _method: 'GET',
+                            _token: '{{ csrf_token() }}'
+                        },
+                    success : function (response)
+                    {
+                        $('#viewUserModal .modal-body').html(`
+                            <div class="container">
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Name:</strong></div>
+                                    <div class="col-8">${response.name}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Email:</strong></div>
+                                    <div class="col-8">${response.email}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Phone Number:</strong></div>
+                                    <div class="col-8">${response.phone_number}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Designation:</strong></div>
+                                    <div class="col-8">${response.designation}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Department:</strong></div>
+                                    <div class="col-8">${response.department}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Position:</strong></div>
+                                    <div class="col-8">${response.position}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Status:</strong></div>
+                                    <div class="col-8">${response.status}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Joining Date:</strong></div>
+                                    <div class="col-8">${response.joining_date}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Address:</strong></div>
+                                    <div class="col-8">${response.address}</div>
+                                </div>
+                            </div>
+                        `);
+                    },
+                    error:function(xhr)
+                    {
+                        Swal.fire('error',"Error fetching user details.");
+
+                    }
+                });
             });
             var status = window.location.pathname.split('/').pop();
             if (status === 'task') {
@@ -354,6 +410,48 @@
             }, 3000); // 3000 ms = 3 seconds
         }
     });
+
+    $(document).on('click', '.deleteuser', function (e) {
+                e.preventDefault();
+                let userId = $(this).data('id');
+                Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `user/deleteuser/${userId}`, // URL for the DELETE request
+                        type : 'DELETE',
+                        data: {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success : function(response){
+                            Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                            });
+                            $('#users-table').DataTable().ajax.reload();
+                        },
+                        error : function (xhr){
+                            Swal.fire('Error!', xhr.responseJSON.message || 'An error occurred while deleting.', 'error');
+
+                        }
+                    });
+
+                    
+                }
+                else{
+                    Swal.fire('Cancelled', 'The user is safe.', 'info');
+                }
+                });
+            });
     </script>
 </body>
 </html>

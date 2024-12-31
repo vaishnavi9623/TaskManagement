@@ -4,8 +4,17 @@
 <div class="container mt-5">
     <div class="card shadow-lg rounded">
         <div class="card-body">
-            <div class="card-title mb-4 text-dark p-1 text-center">
-                <h2>Create New Task</h2><hr>
+            <div class="card-title mb-4 text-dark p-2 text-center" style="background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    {{-- <i class="fas fa-user" style="font-size: 2rem; color: #007bff; margin-right: 15px;"></i> --}}
+                    <span style="font-weight: bold; color: #333;">
+                        <h3>Create New Task</h3>
+                        <p class="mb-1 text-danger"><strong>Monitor the current status and track the progress of every task efficiently</strong>
+                        </p>
+
+                    </span>
+                </div>
+                <hr style="border-top: 2px solid #007bff; width: 50%; margin: 10px auto;">
             </div>
             
             <form id="create-task-form" action="{{route('task.save')}}" enctype="application/x-www-form-urlencoded" method="POST">
