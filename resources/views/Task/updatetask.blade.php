@@ -105,6 +105,9 @@
                         <select class="form-control" id="status" name="status" required style="border: 2px solid #bbb;">
                             <option value="completed" {{ old('status',$task->status ?? '') == 'completed' ? 'selected' : '' }}>Completed</option>
                             <option value="inprogress" {{ old('status',$task->status ?? '') == 'inprogress' ? 'selected' : '' }}>In Progress</option>
+                            <option value="pending" {{ old('status',$task->status ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="upcoming" {{ old('status',$task->status ?? '') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+
                             <option value="overdue" {{ old('status',$task->status ?? '') == 'overdue' ? 'selected' : '' }}>Overdue</option>
                         </select>
                     </div>

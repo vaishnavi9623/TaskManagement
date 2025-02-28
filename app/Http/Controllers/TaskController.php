@@ -19,6 +19,7 @@ class TaskController extends Controller
     {
    
     if ($request->ajax()) {
+    
       if($status){$tasks = Task::where('status',$status)->get();}
       else{$tasks = Task::with('subTasks')->get();
         }

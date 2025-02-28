@@ -8,6 +8,16 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CalendarController;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
+
+
+
+Route::post('/theme-switch', function (Request $request) {
+    $theme = $request->input('theme', 'light');
+    Session::put('theme', $theme);
+    return response()->json(['success' => true, 'theme' => $theme]);
+})->name('theme.switch');
 
 
 //For Login...

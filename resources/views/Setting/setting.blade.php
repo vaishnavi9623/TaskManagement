@@ -66,10 +66,11 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label for="theme-selection" class="form-label fw-bold">Theme Selection</label>
-                        <select class="form-control shadow-sm" id="theme-selection" name="theme_selection" required style="border: 2px solid #bbb;">
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
-                            <option value="auto">Auto</option>
+                        <select class="form-control shadow-sm" id="theme-switcher" name="theme_selection" required style="border: 2px solid #bbb;">
+                                <option value="light" {{ session('theme', 'light') == 'light' ? 'selected' : '' }}>Light</option>
+                                <option value="dark" {{ session('theme') == 'dark' ? 'selected' : '' }}>Dark</option>
+                            
+                                <option value="auto">Auto</option>
                         </select>
                     </div>
                     <div class="col-md-4">

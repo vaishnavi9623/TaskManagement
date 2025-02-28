@@ -104,6 +104,9 @@
                             <option value="completed">Completed</option>
                             <option value="inprogress">In Progress</option>
                             <option value="overdue">Overdue</option>
+                            <option value="pending">Pending</option>
+                            <option value="upcoming">Upcoming</option>
+
                         </select>
                     </div>
                 </div>

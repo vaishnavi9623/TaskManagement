@@ -91,10 +91,23 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
     </style>
 </head>
-<body>
+<body data-theme="{{ session('theme', 'light') }}">
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <ul class="nav flex-column">
@@ -252,7 +265,22 @@
                         },
                     success : function (response)
                     {
-                    console.log(response);
+                        let statusBadge = '';
+                        
+                        if(response.status.toLowerCase() === 'inprogress' || response.status.toLowerCase() === 'pending' || response.status.toLowerCase() === 'overdue' ){
+                            let deadlinedate = new Date(response.deadline);
+                            let currentdate =  new Date();
+                            let delayDays = Math.ceil((currentdate - deadlinedate) / (1000 * 60 * 60 * 24));
+                            statusBadge = `<span class="badge bg-danger"> ${response.status} - Delayed by ${delayDays} days</span>`;
+                        }
+                        else if(response.status.toLowerCase() === 'completed'){
+                            statusBadge = `<span class="badge bg-success">Completed</span>`;
+                        }
+                        else
+                        {
+                            statusBadge = `<span class="badge bg-warning">${response.status}</span>`;
+
+                        }
                         $('#viewTaskModal .modal-body').html(`
                             <div class="container">
                                 <div class="row mb-2">
@@ -260,36 +288,36 @@
                                     <div class="col-8">${response.name}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-4"><strong>Email:</strong></div>
-                                    <div class="col-8">${response.email}</div>
+                                    <div class="col-4"><strong>Description:</strong></div>
+                                    <div class="col-8">${response.description}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-4"><strong>Phone Number:</strong></div>
-                                    <div class="col-8">${response.phone_number}</div>
+                                    <div class="col-4"><strong>Start Date/Time:</strong></div>
+                                    <div class="col-8">${response.starttime}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-4"><strong>Designation:</strong></div>
-                                    <div class="col-8">${response.designation}</div>
+                                    <div class="col-4"><strong>End Date/Time:</strong></div>
+                                    <div class="col-8">${response.endtime}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-4"><strong>Department:</strong></div>
-                                    <div class="col-8">${response.department}</div>
+                                    <div class="col-4"><strong>Category:</strong></div>
+                                    <div class="col-8">${response.category}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-4"><strong>Position:</strong></div>
-                                    <div class="col-8">${response.position}</div>
+                                    <div class="col-4"><strong>Priority:</strong></div>
+                                    <div class="col-8">${response.priority}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>DeadLine:</strong></div>
+                                    <div class="col-8">${response.deadline}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Recurring Task:</strong></div>
+                                    <div class="col-8">${response.recurring_task}</div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-4"><strong>Status:</strong></div>
-                                    <div class="col-8">${response.status}</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-4"><strong>Joining Date:</strong></div>
-                                    <div class="col-8">${response.joining_date}</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-4"><strong>Address:</strong></div>
-                                    <div class="col-8">${response.address}</div>
+                                    <div class="col-8">${statusBadge}</div>
                                 </div>
                             </div>
                         `);
@@ -559,7 +587,23 @@
                 }
                 });
             });
+            document.getElementById('theme-switcher').addEventListener('change', function() {
+                let theme = this.value;
 
+                fetch("{{ route('theme.switch') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ theme: theme })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.documentElement.setAttribute("data-theme", theme); // Change theme
+                    }
+                });
+            });
     </script>
 </body>
 </html>
