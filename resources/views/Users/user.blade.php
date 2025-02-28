@@ -51,6 +51,7 @@
                 {{-- <th>Category</th>
                 <th>Priority</th>
                 <th>DeadLine</th> --}}
+                <th>Photo</th>
                 <th>Designation</th>
                 <th>Actions</th>
             </tr>

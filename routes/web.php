@@ -7,6 +7,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CalendarController;
+use App\Models\User;
 
 
 //For Login...
@@ -21,7 +22,17 @@ Route::get('/dashboard', function () {return view('Dashboard.dashboard');})->nam
 //For Task Management -------------------------------------------------------------------------------------------------
 Route::post('task/save',[TaskController::class,'addnewtask'])->name('task.save');
 Route::get('/task/{status?}', [TaskController::class, 'index'])->name('task')->middleware(IsUserLoggedIn::class);
-Route::get('/addtask', function () {return view('Task.addtask');})->name('addtask')->middleware(IsUserLoggedIn::class);
+// Route::get('/addtask', function () {return view('Task.addtask');})->name('addtask')->middleware(IsUserLoggedIn::class);
+
+Route::get('/addtask', function () {
+    $users = User::all(); // Fetch all users from the database
+    return view('Task.addtask', compact('users'));
+})->name('addtask')->middleware(IsUserLoggedIn::class);
+
+Route::get('/task/gettaskdataforedit/{id}', [TaskController::class, 'gettaskdataforedit'])->name('gettaskdataforedit');
+Route::delete('/task/deletetask/{id}', [TaskController::class, 'deletetask'])->name('deletetask');
+Route::get('/tasks/{id}', [TaskController::class, 'gettaskdetails'])->name('gettaskdetails');
+Route::put('/task/update/{id}', [TaskController::class, 'updatetask'])->name('task.update');
 
 // for user management ---------------------------------------------------------------------------------------------------------------
 Route::get('/user', [UserController::class, 'index'])->name('user');
@@ -47,6 +58,8 @@ Route::get('/notification', function () {return view('Notification.notification'
 Route::get('/time-track', function () {return view('TimeTrack.timetrack');})->name('time-track')->middleware(IsUserLoggedIn::class);
 
 Route::get('/reports', function () {return view('Reports.reports');})->name('reports')->middleware(IsUserLoggedIn::class);
+
+Route::get('/teams', function () {return view('Teams.team');})->name('teams')->middleware(IsUserLoggedIn::class);
 
 
 Route::get('/setting-notification', function () {

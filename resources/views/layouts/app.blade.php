@@ -119,7 +119,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" title="Team">
+                <a class="nav-link" href="{{route('teams')}}" title="Team">
                     <i class="fas fa-users"></i> <span class="d-none d-md-inline">Team</span>
                 </a>
             </li>
@@ -239,6 +239,69 @@
     <script>
         $(document).ready(function() {
             
+            $(document).on('click', '.viewTask', function (e) {
+                e.preventDefault();
+                let taskId = $(this).data('id');
+                $('#viewTaskModal').modal('show');
+                $.ajax({
+                    url : `tasks/${taskId}`,
+                    type : 'GET',
+                    data: {
+                            _method: 'GET',
+                            _token: '{{ csrf_token() }}'
+                        },
+                    success : function (response)
+                    {
+                    console.log(response);
+                        $('#viewTaskModal .modal-body').html(`
+                            <div class="container">
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Name:</strong></div>
+                                    <div class="col-8">${response.name}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Email:</strong></div>
+                                    <div class="col-8">${response.email}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Phone Number:</strong></div>
+                                    <div class="col-8">${response.phone_number}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Designation:</strong></div>
+                                    <div class="col-8">${response.designation}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Department:</strong></div>
+                                    <div class="col-8">${response.department}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Position:</strong></div>
+                                    <div class="col-8">${response.position}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Status:</strong></div>
+                                    <div class="col-8">${response.status}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Joining Date:</strong></div>
+                                    <div class="col-8">${response.joining_date}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-4"><strong>Address:</strong></div>
+                                    <div class="col-8">${response.address}</div>
+                                </div>
+                            </div>
+                        `);
+                    },
+                    error:function(xhr)
+                    {
+                        Swal.fire('error',"Error fetching user details.");
+
+                    }
+                });
+            });
+
             $(document).on('click', '.viewUser', function (e) {
                 e.preventDefault();
                 let userId = $(this).data('id');
@@ -334,6 +397,8 @@
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
                     { data: 'email', name: 'email' },
+                    { data: 'photo', name: 'photo', orderable: false, searchable: false },
+
                     { data: 'designation', name: 'designation' },
                  
                     { data: 'action', name: 'action', orderable: false, searchable: false }
@@ -452,6 +517,49 @@
                 }
                 });
             });
+
+            $(document).on('click', '.deletetask', function (e) {
+                e.preventDefault();
+                let userId = $(this).data('id');
+                Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `task/deletetask/${userId}`, // URL for the DELETE request
+                        type : 'DELETE',
+                        data: {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success : function(response){
+                            Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                            });
+                            $('#tasks-table').DataTable().ajax.reload();
+                        },
+                        error : function (xhr){
+                            Swal.fire('Error!', xhr.responseJSON.message || 'An error occurred while deleting.', 'error');
+
+                        }
+                    });
+
+                    
+                }
+                else{
+                    Swal.fire('Cancelled', 'The task data is safe.', 'info');
+                }
+                });
+            });
+
     </script>
 </body>
 </html>

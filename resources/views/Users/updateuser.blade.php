@@ -92,7 +92,8 @@
                     </div>
                     <div class="col-md-4">
                         <label for="employee-joining-date" class="form-label fw-bold" style="color: #333;">Joining Date</label><span class="text-danger fw-bold">*</span>
-                        <input type="date" class="form-control" id="joining-date" name="joining_date"  style="border: 2px solid #bbb;" value="{{old('joining_date',$user->joining_date)}}">
+                        <input type="date" class="form-control" id="joining-date" name="joining_date"  style="border: 2px solid #bbb;"  value="{{ old('joining_date', $user->joining_date ? date('Y-m-d', strtotime($user->joining_date)) : '') }}"
+                        >                        
                         @error('joining_date')
                         <div class="text-danger fw-bold"><small>{{$message}}</small></div>
                         @enderror
@@ -110,7 +111,7 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <label for="employee-address" class="form-label fw-bold" style="color: #333;">Address</label><span class="text-danger fw-bold">*</span>
-                        <textarea class="form-control" id="address" name="address" rows="4"  style="border: 2px solid #bbb;" value="{{old('address',$user->address)}}"></textarea>
+                        <textarea class="form-control" id="address" name="address" rows="4"  style="border: 2px solid #bbb;" value="">{{old('address',$user->address)}}</textarea>
                         @error('address')
                         <div class="text-danger fw-bold"><small>{{$message}}</small></div>
                         @enderror

@@ -14,8 +14,15 @@ class UserController extends Controller
     if ($request->ajax()) {
         $users = User::all();
          return DataTables::of($users)
+         ->addColumn('photo', function ($row) {
+            if ($row->photo) {
+                return '<img src="' . asset('storage/' . $row->photo) . '" alt="User Photo" style="width: 50px; height: 50px; border-radius: 50%;">';
+            }
+            return '<span class="text-muted">No Photo</span>';
+        })
             ->addColumn('action', function ($row) {
                 return '
+                
                     <a href="#" class="viewUser" data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
                     <a href="' . route('getdataforedit', ['id' => $row->id]) . '" class="editUser" data-id="' . $row->id . '">
                         <i class="fa-solid fa-pen-to-square text-warning"></i>
@@ -31,6 +38,8 @@ class UserController extends Controller
 
     public function saveuser(Request $request)
     {
+        dd($request);
+
             $validate = $request->validate([
                 "name"=>'required|string',
                 "email"=>'required|email',
@@ -43,6 +52,19 @@ class UserController extends Controller
                 "photo"=>'required',
                 "address"=>'required'
             ]);
+
+            // Handle file upload
+            if ($validate['photo']('photo')) {
+                $file = $request->file('photo');
+                dd($file); // Debug the uploaded file object
+            } else {
+                dd('File not uploaded');
+            }            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+                $filename = time() . '_' . $file->getClientOriginalName(); // Create unique file name
+                $path = $file->storeAs('uploads/employees', $filename, 'public'); // Store file in public/uploads/users
+                $validate['photo'] = $path; // Save path to validated data
+            }
 
             User::create([
                 'name'=>$validate['name'],
