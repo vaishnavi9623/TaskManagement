@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
     <style>
         body {
             overflow-x: hidden;
@@ -20,7 +21,7 @@
             top: 0;
             left: 0;
             padding-top: 56px;
-            background-color: #343a40;
+            background-color: #2C3E50;
             width: 250px;
             transition: width 0.2s;
             z-index: 2;
@@ -251,7 +252,8 @@
 
     <script>
         $(document).ready(function() {
-            
+            $('[title]').tooltip();
+
             $(document).on('click', '.viewTask', function (e) {
                 e.preventDefault();
                 let taskId = $(this).data('id');
@@ -324,7 +326,7 @@
                     },
                     error:function(xhr)
                     {
-                        Swal.fire('error',"Error fetching user details.");
+                        Swal.fire('error',"Error fetching task details.");
 
                     }
                 });
@@ -391,6 +393,59 @@
                     }
                 });
             });
+            ;
+            $(document).on('click','.updatepassword',function(e){
+                e.preventDefault();
+                let userId = $(this).data('id');
+                $('#updatePasswordForm').attr('data-id', userId); // Assign user ID to form
+                $('#updatePassModal').modal('show'); // Show modal
+            });
+
+            $(document).on('submit', '#updatePasswordForm', function (e) {
+                e.preventDefault(); 
+                let userId = $(this).data('id');
+                let password = $('#newPassword').val();
+                let confirmPassword = $('#confirmPassword').val();
+
+                if(password.length < 8){
+                    Swal.fire('Error !','Password must be at least 8 character long','error');
+                    return;
+                }
+                if(password != confirmPassword){
+                    Swal.fire('Error !','Passwords do not match!','error');
+                    return;
+                }
+                $.ajax({
+                        url: `user/updatepass/${userId}`, // URL for the DELETE request
+                        type : 'POST',
+                        data: {
+                            _method: 'POST',
+                            _token: '{{ csrf_token() }}',
+                            password:password,
+                            confirmPassword:confirmPassword,
+                        },
+                        success : function(response){
+                            console.log(response)
+                            Swal.fire('Success !','Password updated successfully.','success');
+                            $('#users-table').DataTable().ajax.reload();
+                            // Close the modal
+                            $('#updatePassModal').modal('hide');
+                            // Reset the form
+                            $('#updatePasswordForm')[0].reset();
+                        },
+                        error : function (xhr){
+                            Swal.fire('Error!', xhr.responseJSON.message || 'An error occurred while updating.', 'error');
+
+                        }
+                    });
+            });
+
+            $(document).on('click','.addnote',function(e){
+                e.preventDefault();
+                let userId = $(this).data('id');
+                $('#addNoteModal').modal('show');
+            });
+            
             var status = window.location.pathname.split('/').pop();
             if (status === 'task') {
                 status = null;
@@ -425,10 +480,16 @@
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
                     { data: 'email', name: 'email' },
-                    { data: 'photo', name: 'photo', orderable: false, searchable: false },
-
                     { data: 'designation', name: 'designation' },
-                 
+                    { data: 'department', name: 'department' },
+                    { data: 'photo', name: 'photo', orderable: false, searchable: false },
+                    { data: 'status', name: 'status' ,
+                        render: function(data,type,row){
+                            let badgeClass = (data.toLowerCase === 'active') ? "bg-success text-white rounded-circle" : "bg-success rounded-circle text-white";
+        return `<span class="px-3 py-1 rounded-full rounded-circle ${badgeClass}">${data}</span>`;
+                        }
+                    },
+
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]
             });
@@ -449,7 +510,13 @@
                     { data: 'start_date', name: 'start_date' },
                     { data: 'end_date', name: 'end_date' },
                     { data: 'priority', name: 'priority' },
-                    { data: 'status', name: 'status' },
+                    { data: 'status', name: 'status' ,
+                        render: function(data,type,row){
+                            let badgeClass = (data === 'active')?"bg-green-500 text-white" : "bg-red-500 text-white";
+        return `<span class="px-3 py-1 rounded-full ${badgeClass}">${data}</span>`;
+                        }
+                    },
+
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]
             });
@@ -503,7 +570,7 @@
             }, 3000); // 3000 ms = 3 seconds
         }
     });
-
+    
     $(document).on('click', '.deleteuser', function (e) {
                 e.preventDefault();
                 let userId = $(this).data('id');
@@ -545,7 +612,34 @@
                 }
                 });
             });
+            $("#Userfilter-form input").on("keyup", function () {
+            // alert(345678)
+            let rowconut = 0 ;
+            let name = $("#name").val().toLowerCase();
+            let designation = $("#designation").val().toLowerCase();
+            let department = $("#department").val().toLowerCase();
 
+            $("#users-table tbody tr").filter(function () {
+                let row = $(this);
+                let nameMatch = row.find("td:eq(1)").text().toLowerCase().includes(name);
+                let designationMatch = row.find("td:eq(3)").text().toLowerCase().includes(designation);
+                let departmentMatch = row.find("td:eq(4)").text().toLowerCase().includes(department);
+
+                if (nameMatch && designationMatch && departmentMatch) {
+                    row.show();
+                    rowconut++;
+                } else {
+                    row.hide();
+                }
+            });
+            if(rowconut == 0){$("#no-records").show();}
+            else{$("#no-records").hide();}
+        });
+
+        $("#resetFilters").click(function () {
+            $("#Userfilter-form input").val("");
+            $("#users-table tbody tr").show();
+        });
             $(document).on('click', '.deletetask', function (e) {
                 e.preventDefault();
                 let userId = $(this).data('id');
@@ -587,23 +681,26 @@
                 }
                 });
             });
-            document.getElementById('theme-switcher').addEventListener('change', function() {
-                let theme = this.value;
+            // document.getElementById('theme-switcher').addEventListener('change', function() {
+            //     let theme = this.value;
 
-                fetch("{{ route('theme.switch') }}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ theme: theme })
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.documentElement.setAttribute("data-theme", theme); // Change theme
-                    }
-                });
-            });
+            //     fetch("{{ route('theme.switch') }}", {
+            //         method: "POST",
+            //         headers: {
+            //             "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            //             "Content-Type": "application/json"
+            //         },
+            //         body: JSON.stringify({ theme: theme })
+            //     }).then(response => response.json())
+            //     .then(data => {
+            //         if (data.success) {
+            //             document.documentElement.setAttribute("data-theme", theme); // Change theme
+            //         }
+            //     });
+            // });
+        
+   
     </script>
+    
 </body>
 </html>

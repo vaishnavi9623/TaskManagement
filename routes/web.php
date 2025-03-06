@@ -52,6 +52,7 @@ Route::get('/user/getdataforedit/{id}', [UserController::class, 'getdataforedit'
 Route::put('/user/update/{id}', [UserController::class, 'updateUser'])->name('user.update');
 Route::delete('/user/deleteuser/{id}', [UserController::class, 'deleteuser'])->name('deleteuser');
 Route::get('/user/{id}', [UserController::class, 'getUserDetails'])->name('getuserdetails');
+Route::post('/user/updatepass/{id}', [UserController::class, 'updatepass'])->name('updatepass');
 
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('project');

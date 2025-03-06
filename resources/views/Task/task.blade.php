@@ -4,7 +4,7 @@
     
     <div class="container mt-4">
         <h3>Task Overview </h3>
-    <p class="mb-4 text-danger"><strong>Get insights into the status and progress of all tasks</strong></p>
+        <p class="mb-4 text-danger"><strong>Get insights into the status and progress of all tasks</strong></p>
         <form method="GET" action="#" class="row g-3" id="filter-form">
             <p class="fw-bold">Use the filters to find tasks easily</p>
     
@@ -95,22 +95,63 @@
     </table>
 </div>
 
-<div class="modal" tabindex="-1" id="viewTaskModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Task Details</h5>
-          <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="viewTaskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Loading...</p>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Loading...</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
-  
+</div>
+
+  <!-- Add Note Modal -->
+<div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNoteLabel">Add Note</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Accordion for Previous Notes -->
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Previous Notes...
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the first item's accordion body.</strong> It is hidden by default. Click the button to view the content.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Note Form -->
+                <form id="addNoteForm">
+                    <input type="hidden" id="task_id_note">
+                    <div class="mb-3">
+                        <label for="note_text" class="form-label">Add Note:</label>
+                        <textarea class="form-control" id="note_text" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark">Save Note</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
   
 @endsection

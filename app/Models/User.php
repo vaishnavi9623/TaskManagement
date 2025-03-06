@@ -26,6 +26,7 @@ class User extends Authenticatable
         'phone',
         'status',
         'joining_date',
+        'photo',
         'phone_number',
         'address'
 

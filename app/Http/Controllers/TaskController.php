@@ -34,10 +34,11 @@ class TaskController extends Controller
             ->addColumn('action', function ($row) {
                 return '
                 <a href="#" class="viewTask" data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
-                <a href="' . route('gettaskdataforedit', ['id' => $row->id]) . '" class="editTask" data-id="' . $row->id . '">
-                    <i class="fa-solid fa-pen-to-square text-warning"></i>
-                </a>
+                <a href="' . route('gettaskdataforedit', ['id' => $row->id]) . '" class="editTask" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-warning"></i></a>
                 <a href="' . route('deletetask', ['id' => $row->id]) . '"  data-id="' . $row->id . '" class="deletetask"><i class="fa-solid fa-trash text-danger"></i></a>
+                <a href="#"  data-id="' . $row->id . '" class="addnote"><i class="fa fa-sticky-note text-primary"></i></a>
+                <a href="#"  data-id="' . $row->id . '" class="addcomment"><i class="fa fa-commenting text-success"></i></a>
+
             ';
         })
             ->make(true);

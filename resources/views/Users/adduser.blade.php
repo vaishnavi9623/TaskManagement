@@ -15,7 +15,7 @@
             </div>
             
             
-            <form id="create-employee-form" action="{{route('user.save')}}" enctype="application/x-www-form-urlencoded" method="POST">
+            <form id="create-employee-form" action="{{route('user.save')}}" enctype="multipart/form-data" method="POST">
                 @csrf
                 <!-- Employee Name, Email, and Phone -->
                 <div class="row mb-3">
@@ -122,6 +122,7 @@
                 </div>
             </form>
         </div>
+        
     </div>
 </div>
 @endsection

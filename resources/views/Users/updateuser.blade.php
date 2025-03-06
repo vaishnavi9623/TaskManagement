@@ -13,7 +13,7 @@
                 </div>
                 <hr style="border-top: 2px solid #007bff; width: 50%; margin: 10px auto;">
             </div>
-            <form id="create-employee-form" action="{{ route('user.update', $user->id) }}" enctype="application/x-www-form-urlencoded" method="POST">
+            <form id="create-employee-form" action="{{ route('user.update', $user->id) }}" enctype="multipart/form-data" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -98,14 +98,32 @@
                         <div class="text-danger fw-bold"><small>{{$message}}</small></div>
                         @enderror
                     </div>
-                    <div class="col-md-4">
-                        <label for="employee-photo" class="form-label fw-bold" style="color: #333;">Photo</label><span class="text-danger fw-bold">*</span>
-                        <input type="file" class="form-control" id="employee-photo" name="photo" accept="image/*" style="border: 2px solid #bbb;">
+                    
+                    <div class="col-md-6">
+                        <label for="employee-photo" class="form-label fw-bold text-dark">
+                            Photo <span class="text-danger">*</span>
+                        </label>
+                    
+                        <div class="d-flex align-items-center">
+                            <!-- File Input -->
+                            <input type="file" class="form-control border-secondary me-3" id="employee-photo" 
+                                   name="photo" accept="image/*" style="max-width: 250px;">
+                            
+                            <!-- Display Existing Image -->
+                            @if($user->photo)
+                                <img src="{{ asset('storage/uploads/employees/' . $user->photo) }}" 
+                                     alt="User Photo" 
+                                     class="img-thumbnail rounded-circle" 
+                                     style="width: 100px; height: 100px; object-fit: cover;">
+                            @endif
+                        </div>
+                    
+                        <!-- Error Message -->
                         @error('photo')
-                        <div class="text-danger fw-bold"><small>{{$message}}</small></div>
+                            <div class="text-danger fw-bold mt-2"><small>{{ $message }}</small></div>
                         @enderror
                     </div>
-                </div>
+                    
 
                 <!-- Employee Address (Full-width) -->
                 <div class="row mb-3">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends Controller
@@ -11,25 +12,27 @@ class UserController extends Controller
     public function index(Request $request, $status = null)
     {
    
+    //<a href="#"  data-id="' . $row->id . '" class="viewlog"><i class="fa fa-history text-success"></i></a>
     if ($request->ajax()) {
         $users = User::all();
          return DataTables::of($users)
          ->addColumn('photo', function ($row) {
             if ($row->photo) {
-                return '<img src="' . asset('storage/' . $row->photo) . '" alt="User Photo" style="width: 50px; height: 50px; border-radius: 50%;">';
+                return '<img src="' . asset('storage/uploads/employees/' . $row->photo) . '" 
+                    alt="User Photo" style="width: 50px; height: 50px; border-radius: 50%;">';
             }
             return '<span class="text-muted">No Photo</span>';
         })
+        
             ->addColumn('action', function ($row) {
                 return '
                 
-                    <a href="#" class="viewUser" data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
-                    <a href="' . route('getdataforedit', ['id' => $row->id]) . '" class="editUser" data-id="' . $row->id . '">
-                        <i class="fa-solid fa-pen-to-square text-warning"></i>
-                    </a>
+                    <a href="#" class="viewUser " data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
+                    <a href="' . route('getdataforedit', ['id' => $row->id]) . '" class="editUser" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-warning"></i></a>
                     <a href="' . route('deleteuser', ['id' => $row->id]) . '"  data-id="' . $row->id . '" class="deleteuser"><i class="fa-solid fa-trash text-danger"></i></a>
-                ';
+                    <a href="#"  data-id="' . $row->id . '" class="updatepassword"><i class="fa fa-unlock-alt text-dark"></i></a>';
             })
+            ->rawColumns(['action','photo']) 
             ->make(true);
     }
 
@@ -38,7 +41,7 @@ class UserController extends Controller
 
     public function saveuser(Request $request)
     {
-        dd($request);
+        //dd($request);
 
             $validate = $request->validate([
                 "name"=>'required|string',
@@ -53,20 +56,16 @@ class UserController extends Controller
                 "address"=>'required'
             ]);
 
-            // Handle file upload
-            if ($validate['photo']('photo')) {
-                $file = $request->file('photo');
-                dd($file); // Debug the uploaded file object
-            } else {
-                dd('File not uploaded');
-            }            if ($request->hasFile('photo')) {
+           
+             if ($request->hasFile('photo')) {
                 $file = $request->file('photo');
                 $filename = time() . '_' . $file->getClientOriginalName(); // Create unique file name
                 $path = $file->storeAs('uploads/employees', $filename, 'public'); // Store file in public/uploads/users
-                $validate['photo'] = $path; // Save path to validated data
+                $validate['photo'] = $filename; // Save path to validated data
             }
 
-            User::create([
+            //dd($filename);
+           $user = User::create([
                 'name'=>$validate['name'],
                 'email'=>$validate['email'],
                 'phone_number'=>$validate['phone_number'],
@@ -75,10 +74,11 @@ class UserController extends Controller
                 'position'=>$validate['position'],
                 'status'=>$validate['status'],
                 'joining_date'=>$validate['joining_date'],
-                'photo'=>$validate['photo'],
-                'address'=>$validate['address']
+                'photo'=>$filename,
+                'address'=>$validate['address'],
+                'password' => Hash::make('password123')
             ]);
-
+            // dd($user);
             return redirect()->route('user')->with('success', 'User added successfully!');
     }
 
@@ -91,6 +91,7 @@ class UserController extends Controller
 
     public function updateUser($id, Request $request)
     {
+
         $validate = $request->validate([
             "name"=>'required|string',
             "email"=>'required|email',
@@ -103,12 +104,32 @@ class UserController extends Controller
             "photo"=>'required',
             "address"=>'required'
         ]);
+        // dd($request->file('photo'));
+
+        if ($request->file('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Create unique file name
+            $path = $file->storeAs('uploads/employees', $filename, 'public'); // Store file in public/uploads/users
+            $validate['photo'] = $filename; // Save path to validated data
+        }
+        // dd($path);
 
         User::where('id',$id)
             ->update($validate);
 
         return redirect()->route('user')->with('success', 'User updated successfully!');
 
+
+    }
+    public function updatepass($id, Request $request)
+    {
+
+        $req =  $request->all();
+        
+        $data = ['password'=>Hash::make($req['password'])];
+            User::where('id',$id)->update($data);
+
+        return redirect()->route('user')->with('success', 'User updated successfully!');
 
     }
 
