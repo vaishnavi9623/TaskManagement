@@ -43,6 +43,12 @@ Route::get('/task/gettaskdataforedit/{id}', [TaskController::class, 'gettaskdata
 Route::delete('/task/deletetask/{id}', [TaskController::class, 'deletetask'])->name('deletetask');
 Route::get('/tasks/{id}', [TaskController::class, 'gettaskdetails'])->name('gettaskdetails');
 Route::put('/task/update/{id}', [TaskController::class, 'updatetask'])->name('task.update');
+Route::get('/task/get-task-notes/{id}', [TaskController::class, 'gettasknotes'])->name('gettasknotes');
+Route::post('task/savenote',[TaskController::class,'savenote'])->name('savenote');
+Route::get('/task/get-task-comments/{id}', [TaskController::class, 'gettaskcomments'])->name('gettaskcomments');
+Route::post('task/savecomment',[TaskController::class,'savecomment'])->name('savecomment');
+Route::post('/task/updatestatus/', [TaskController::class, 'updatestatus'])->name('updatestatus');
+
 
 // for user management ---------------------------------------------------------------------------------------------------------------
 Route::get('/user', [UserController::class, 'index'])->name('user');

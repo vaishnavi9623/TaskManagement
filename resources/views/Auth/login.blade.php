@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Task Management App</title>
     <!-- Include compiled CSS via Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/login.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
 </head>
@@ -21,8 +21,8 @@
     
             <!-- Login Form Column -->
             <div class="col-md-6">
-                <div class="card w-100">
-                    <div class="card-header text-center">
+                <div class="card w-100 logincard">
+                    <div class="card-header logincard-header text-center">
                         <h2>Task Manager Login</h2>
                     </div>
                     <div class="card-body">

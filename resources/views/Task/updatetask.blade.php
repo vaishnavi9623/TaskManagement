@@ -135,7 +135,7 @@
 
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-warning px-4 py-2" id="save-task-btn" style="font-weight: bold; ">Update Task</button>
+                        <button type="submit" class="btn text-white fw-bold px-4 py-2" id="save-task-btn" style="font-weight: bold;background-color:#4dbfba; ">Update Task</button>
                     </div>
                 </div>
             </form>

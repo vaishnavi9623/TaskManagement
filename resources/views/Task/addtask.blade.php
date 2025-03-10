@@ -8,7 +8,7 @@
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <span style="font-weight: bold; color: #333;">
                         <h3>Create New Task</h3>
-                        <p class="mb-1 text-danger"><strong>Monitor the current status and track the progress of every task efficiently</strong></p>
+                        <p class="mb-1 text-danger">Monitor the current status and track the progress of every task efficiently</p>
                     </span>
                 </div>
                 <hr style="border-top: 2px solid #007bff; width: 50%; margin: 10px auto;">
@@ -126,7 +126,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-warning px-4 py-2" id="save-task-btn" style="font-weight: bold;">Save Task</button>
+                        <button type="submit" class="btn  px-4 py-2" id="save-task-btn" style="font-weight: bold;background-color:#4dbfba">Save Task</button>
                     </div>
                 </div>
             </form>

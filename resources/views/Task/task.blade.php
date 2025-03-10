@@ -102,10 +102,38 @@
                 <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+          
             <div class="modal-body">
                 <p>Loading...</p>
             </div>
-            
+            <div class="card ml-5" style="margin-left: 20px;margin-right:20px;">
+                <div class="card-body">
+                    <form id="updateTaskStatusForm" method="POST" action="{{route('updatestatus')}}" enctype="multipart/form-data">
+                        @csrf
+                        {{-- @method('PUT') --}}
+                        <div class="mb-3">
+                            <label for="taskStatus" class="form-label">Update Task Status</label>
+                            <select class="form-select" id="taskStatus" name="status">
+                                <option value="completed">Completed</option>
+                                <option value="inprogress">In Progress</option>
+                                <option value="overdue">Overdue</option>
+                                <option value="pending">Pending</option>
+                                <option value="upcoming">Upcoming</option>
+                            </select>
+                        </div>
+                        <input type="hidden" class="form-control" id="taskids" name="taskids">
+
+                        <div class="mb-3">
+                            <label for="taskAttachment" class="form-label">Attach File (Optional)</label>
+                            <input type="file" class="form-control" id="taskAttachment" name="attachment">
+                        </div>
+                    
+                    
+                        <button type="submit" class="btn text-white fw-bold" style="background-color:#4dbfba;">Update Status</button>
+                    </form>
+                    
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -118,40 +146,69 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addNoteLabel">Add Note</h5>
+                <h5 class="modal-title" id="addNoteLabel">Add/View Notes</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- Accordion for Previous Notes -->
-                <div class="accordion" id="accordionExample">
+                <div class="accordion mb-2 max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-4" id="accordionExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Previous Notes...
+                                View Your Previous Notes...
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div id="collapseOne" class="accordion-collapse collapse mb-5" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <strong>This is the first item's accordion body.</strong> It is hidden by default. Click the button to view the content.
+                                <ul id="notesList" class="list-group">
+                                    <!-- Notes will be inserted here dynamically -->
+                                </ul>
                             </div>
                         </div>
                     </div>
+                     <!-- New Note Form -->
+                <form id="addNoteForm" method="POST" action="{{route('savenote')}}" enctype="application/x-www-form-urlencoded">
+                    @csrf
+                    <input type="hidden" id="task_id" name="task_id">
+                    <div class="mb-3">
+                        <label for="note_text mt-2" class="form-label">Your Note:</label>
+                        <textarea class="form-control" id="note_text" name="note" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn text-white" style="font-weight: bold;background-color:#4dbfba">Save Note</button>
+                </form>
                 </div>
 
-                <!-- New Note Form -->
-                <form id="addNoteForm">
-                    <input type="hidden" id="task_id_note">
-                    <div class="mb-3">
-                        <label for="note_text" class="form-label">Add Note:</label>
-                        <textarea class="form-control" id="note_text" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-dark">Save Note</button>
-                </form>
+               
             </div>
         </div>
     </div>
 </div>
 
+<!-- Add Comment Modal -->
+<div class="modal fade" id="addCommentModal" tabindex="-1" aria-labelledby="addCommentModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add/View Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-4">                
 
-  
+                    <!-- Scrollable Comment Section -->
+                    <div class="comment-container" style="max-height: 400px; overflow-y: auto; padding-right: 10px;" id="CommentList">
+                    </div>
+                    <div class="mt-4">
+                        <form id="addCommentForm" method="POST" action="{{route('savecomment')}}" enctype="application/x-www-form-urlencoded">
+                        @csrf
+                        <input type="hidden" id="taskid" name="taskid">
+                        <textarea class="form-control" rows="3" name="comments" id="comments" placeholder="Write a comment..."></textarea>
+                        <button type="submit" class="btn  mt-2 text-white" style="font-weight: bold;background-color:#4dbfba">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
 @endsection

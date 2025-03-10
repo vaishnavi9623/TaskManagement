@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\SubTask;
 use App\Models\User;
+use App\Models\TaskComment;
+use App\Models\TaskNote;
 use Carbon\Carbon;
 
 use Yajra\DataTables\Facades\DataTables;
@@ -17,9 +18,8 @@ class TaskController extends Controller
   
    public function index(Request $request, $status = null)
     {
-   
+
     if ($request->ajax()) {
-    
       if($status){$tasks = Task::where('status',$status)->get();}
       else{$tasks = Task::with('subTasks')->get();
         }
@@ -30,17 +30,18 @@ class TaskController extends Controller
                 'message' => 'No tasks found'
             ]);
         }
-         return DataTables::of($tasks)
-            ->addColumn('action', function ($row) {
+        $UserId = Auth::id();
+        return DataTables::of($tasks)
+            ->addColumn('action', function ($row) use ($UserId) { // Pass $UserId explicitly using "use"
                 return '
-                <a href="#" class="viewTask" data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
-                <a href="' . route('gettaskdataforedit', ['id' => $row->id]) . '" class="editTask" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-warning"></i></a>
-                <a href="' . route('deletetask', ['id' => $row->id]) . '"  data-id="' . $row->id . '" class="deletetask"><i class="fa-solid fa-trash text-danger"></i></a>
-                <a href="#"  data-id="' . $row->id . '" class="addnote"><i class="fa fa-sticky-note text-primary"></i></a>
-                <a href="#"  data-id="' . $row->id . '" class="addcomment"><i class="fa fa-commenting text-success"></i></a>
-
-            ';
-        })
+                    <a href="#" class="viewTask" data-id="' . $row->id . '"><i class="fa-regular fa-eye"></i></a>
+                    <a href="' . route('gettaskdataforedit', ['id' => $row->id]) . '" class="editTask" data-id="' . $row->id . '"><i class="fa-solid fa-pen-to-square text-warning"></i></a>
+                    <a href="' . route('deletetask', ['id' => $row->id]) . '"  data-id="' . $row->id . '" class="deletetask"><i class="fa-solid fa-trash text-danger"></i></a>
+                    <a href="#" data-task-id="' . $row->id . '" data-user-id="' . $UserId . '" class="addnote"><i class="fa fa-sticky-note text-primary"></i></a>
+                    <a href="#" data-id="' . $row->id . '" class="addcomment"><i class="fa fa-commenting text-success"></i></a>
+                ';
+            })
+            ->rawColumns(['action'])
             ->make(true);
     }
 
@@ -126,9 +127,25 @@ class TaskController extends Controller
         return response()->json($task); 
     }
 
+    public function updatestatus(Request $request){
+        $request->validate([
+            'taskids' => 'required', // Ensure task exists
+            'status' => 'required|string', // Adjust statuses as needed
+        ]);
+    
+        // Update the task status
+        $task = Task::where('id', $request->id)->update(['status' => $request->status]);
+    
+        // Check if update was successful
+        if ($task) {
+            return redirect()->route('task')->with('success', 'Task updated successfully!');
+        } else {
+            return redirect()->route('task')->with('error', 'Failed to update task!');
+        }
+
+    }
     public function updatetask($id, Request $request)
     {
-        //dd($id);
         $UserId = Auth::id();
         try {
             $validate = $request->validate([
@@ -180,4 +197,64 @@ class TaskController extends Controller
         
 
     }
+
+    public function gettasknotes($id)
+    {
+        $UserId = Auth::id();
+        $tasknotes = TaskNote::Where('task_id',$id)
+                    // ->where('user_id', $UserId) 
+                    ->join('users', 'task_notes.user_id', '=', 'users.id')
+                    ->select('task_notes.*', 'users.name as user_name')
+                    ->orderBy('task_notes.created_at', 'desc')
+                    ->get();
+        return response()->json($tasknotes); 
+    }
+
+    public function gettaskcomments($id){
+        $UserId = Auth::id();
+        $taskcomment = TaskComment::Where('task_id',$id)
+                    // ->where('user_id', $UserId) 
+                    ->join('users', 'task_comments.user_id', '=', 'users.id')
+                    ->select('task_comments.*', 'users.name as user_name')
+                    ->orderBy('task_comments.created_at', 'desc')
+                    ->get();
+        return response()->json($taskcomment);
+    }
+    public function savenote(Request $request)
+    {
+       $UserId =  Auth::id();
+       $validate = $request->validate([
+        'note'=>'required|string',
+        'task_id'=>'required',
+       ]);
+
+       $noteddata = TaskNote::create([
+        'note'=>$validate['note'],
+        'task_id'=>$validate['task_id'],
+        'user_id'=>$UserId
+       ]);
+       if($noteddata){
+       return redirect()->route('task')->with('success', 'Noted added successfully!');
+       }
+    }
+
+    public function savecomment(Request $request)
+    {    
+        $UserId = Auth::id();
+    
+        $validate = $request->validate([
+            'comments' => 'required|string',
+            'taskid' => 'required', 
+        ]);
+
+        $commentdata = TaskComment::create([
+            'comments' => $validate['comments'],
+            'task_id' => $validate['taskid'],
+            'user_id' => $UserId
+        ]);
+        if ($commentdata) {
+            return redirect()->route('task')->with('success', 'Comments added successfully!');
+        }
+    }
+    
 }

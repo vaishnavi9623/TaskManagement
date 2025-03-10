@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-3">
             {{-- <button type="btn" class="btn btn-primary" id="filterbtn">Filter</button> --}}
-            <a href="{{ route('task') }}" class="btn btn-secondary" id="resetFilters">Reset</a>
+            <a href="{{ route('user') }}" class="btn btn-secondary" id="resetFilters">Reset</a>
         </div>
     </form>
 </div>

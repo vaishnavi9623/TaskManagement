@@ -1,5 +1,8 @@
 import './bootstrap';
 import 'bootstrap';
+import './task.js';
+import './user.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     // Function to hide validation error messages after 5 seconds
     setTimeout(function () {
