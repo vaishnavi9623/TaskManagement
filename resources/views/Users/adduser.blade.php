@@ -118,7 +118,7 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn px-4 py-2" id="save-employee-btn" style="font-weight: bold; border-radius: 10px;background-color:#4dbfba;">Save Employee</button>
+                    <button type="submit" class="btn px-4 py-2 text-light" id="save-employee-btn" style="font-weight: bold; border-radius: 10px;background-color:#4dbfba;">Save Employee</button>
                 </div>
             </form>
         </div>

@@ -128,15 +128,12 @@ class TaskController extends Controller
     }
 
     public function updatestatus(Request $request){
-        $request->validate([
+        $validate = $request->validate([
             'taskids' => 'required', // Ensure task exists
             'status' => 'required|string', // Adjust statuses as needed
         ]);
     
-        // Update the task status
-        $task = Task::where('id', $request->id)->update(['status' => $request->status]);
-    
-        // Check if update was successful
+        $task = Task::where('id', $validate['taskids'] )->update(['status' => $validate['status'] ]);
         if ($task) {
             return redirect()->route('task')->with('success', 'Task updated successfully!');
         } else {
@@ -144,6 +141,7 @@ class TaskController extends Controller
         }
 
     }
+    
     public function updatetask($id, Request $request)
     {
         $UserId = Auth::id();

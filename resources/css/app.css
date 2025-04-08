@@ -63,9 +63,7 @@ body {
 .navbar-toggler-icon {
   color: #343a40;
 }
-.bg-danger {
-  background-color: #ff3ca6 !important;
-}
+
 .table-bordered {
   border: 1px solid #dee2e6;
 }
@@ -187,4 +185,14 @@ body {
 
 #chat-icon:hover #chat-tooltip {
   display: block;
+}
+select option:checked {
+  background-color: #dbe6f2;
+  color: rgb(10, 10, 10);
+  font-weight: bold;
+}.rounded-circle {
+  border-radius: 50%;
+  object-fit: cover;
+} .me-n2 {
+  margin-right: -0.5rem !important; /* overlap amount */
 }

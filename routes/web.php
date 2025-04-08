@@ -7,6 +7,8 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\TeamsController;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -32,8 +34,6 @@ Route::get('/dashboard', function () {return view('Dashboard.dashboard');})->nam
 //For Task Management -------------------------------------------------------------------------------------------------
 Route::post('task/save',[TaskController::class,'addnewtask'])->name('task.save');
 Route::get('/task/{status?}', [TaskController::class, 'index'])->name('task')->middleware(IsUserLoggedIn::class);
-// Route::get('/addtask', function () {return view('Task.addtask');})->name('addtask')->middleware(IsUserLoggedIn::class);
-
 Route::get('/addtask', function () {
     $users = User::all(); // Fetch all users from the database
     return view('Task.addtask', compact('users'));
@@ -49,10 +49,27 @@ Route::get('/task/get-task-comments/{id}', [TaskController::class, 'gettaskcomme
 Route::post('task/savecomment',[TaskController::class,'savecomment'])->name('savecomment');
 Route::post('/task/updatestatus/', [TaskController::class, 'updatestatus'])->name('updatestatus');
 
+//For Team Management -------------------------------------------------------------------------------------------------
+Route::post('team/save',[TeamsController::class,'addnewteam'])->name('teams.store');
+Route::get('/team', [TeamsController::class, 'index'])->name('team')->middleware(IsUserLoggedIn::class);
+Route::get('/addteam', function () {
+    $users = User::all(); 
+    return view('teams.addteam', compact('users'));
+})->name('addteam')->middleware(IsUserLoggedIn::class);
+Route::get('/team/getteamdataforedit/{id}', [TeamsController::class, 'getteamdataforedit'])->name('getteamdataforedit');
+Route::delete('/team/deleteteam/{id}', [TeamsController::class, 'deleteteam'])->name('deleteteam');
+Route::get('/team/{id}', [TeamsController::class, 'getteamdetails'])->name('getteamdetails');
+Route::put('/team/update/{id}', [TeamsController::class, 'updateteam'])->name('team.update');
+
+
 
 // for user management ---------------------------------------------------------------------------------------------------------------
 Route::get('/user', [UserController::class, 'index'])->name('user');
-Route::get('/adduser', function () {return view('Users.adduser');})->name('adduser')->middleware(IsUserLoggedIn::class);
+Route::get('/adduser', function () {
+    $users = User::all();
+    return view('Users.adduser');
+})->name('adduser')->middleware(IsUserLoggedIn::class);
+
 Route::post('user/saveUser',[UserController::class,'saveuser'])->name('user.save');
 Route::get('/user/getdataforedit/{id}', [UserController::class, 'getdataforedit'])->name('getdataforedit');
 Route::put('/user/update/{id}', [UserController::class, 'updateUser'])->name('user.update');
@@ -62,7 +79,18 @@ Route::post('/user/updatepass/{id}', [UserController::class, 'updatepass'])->nam
 
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('project');
-Route::get('/addprojects', function () {return view('Projects.addprojects');})->name('addprojects')->middleware(IsUserLoggedIn::class);
+Route::get('/addprojects', function () {
+    $users = User::all();
+    $teams = Team::all();
+    return view('Projects.addprojects',compact('users','teams'));
+
+})->name('addprojects')->middleware(IsUserLoggedIn::class);
+Route::post('projects/saveProject',[ProjectController::class,'saveProject'])->name('project.store');
+Route::delete('/projects/deleteproject/{id}', [ProjectController::class, 'deleteproject'])->name('deleteproject');
+Route::get('/projects/getprjdataforedit/{id}', [ProjectController::class, 'getprjdataforedit'])->name('getprjdataforedit');
+Route::put('/projects/update/{id}', [ProjectController::class, 'updateproject'])->name('project.update');
+Route::get('/projects/{id}', [ProjectController::class, 'getprojectdetails'])->name('getprojectdetails');
+
 
 // Route::get('/timetrack', function () { return view('Task.timetrack'); })->name('timetrack');
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
@@ -76,7 +104,7 @@ Route::get('/time-track', function () {return view('TimeTrack.timetrack');})->na
 
 Route::get('/reports', function () {return view('Reports.reports');})->name('reports')->middleware(IsUserLoggedIn::class);
 
-Route::get('/teams', function () {return view('Teams.team');})->name('teams')->middleware(IsUserLoggedIn::class);
+// Route::get('/teams', function () {return view('Teams.team');})->name('teams')->middleware(IsUserLoggedIn::class);
 
 
 Route::get('/setting-notification', function () {

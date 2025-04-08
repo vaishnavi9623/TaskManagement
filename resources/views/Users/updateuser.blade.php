@@ -137,7 +137,7 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-warning px-4 py-2" id="save-employee-btn" style="font-weight: bold; border-radius: 10px;">Update Employee</button>
+                    <button type="submit" class="btn text-light px-4 py-2" id="save-employee-btn" style="font-weight: bold; border-radius: 10px;background-color:#4dbfba;">Update Employee</button>
                 </div>
             </form>
         </div>

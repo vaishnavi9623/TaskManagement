@@ -205,9 +205,55 @@ $('#tasks-table').DataTable({
         { data: 'name', name: 'name' },
         { data: 'description', name: 'description' },
         { data: 'category', name: 'category' },
-        { data: 'priority', name: 'priority' },
+        { 
+            data: 'priority', 
+            name: 'priority',
+            render: function(data) {
+                let priority = data.trim().toLowerCase(); 
+                let icon = '';
+                let priorityClass = '';
+        
+                if (priority === 'high' || priority === 'critical') {
+                    icon = '<i class="fa-solid fa-circle-exclamation me-1"></i>';
+                    priorityClass = 'bg-danger text-white';
+                } else if (priority === 'medium') {
+                    icon = '<i class="fa-solid fa-arrow-up me-1"></i>';
+                    priorityClass = 'bg-warning text-white';
+                } else {
+                    icon = '<i class="fa-solid fa-arrow-down me-1"></i>';
+                    priorityClass = 'bg-secondary text-white';
+                }
+        
+                return `<span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill ${priorityClass}" style="min-width: 100px; font-size: 0.8rem;">
+                            ${icon}${data}
+                        </span>`;
+            }
+        },
         { data: 'deadline', name: 'deadline' },
-        { data: 'status', name: 'status' },
+        { 
+            data: 'status', 
+            name: 'status',
+            render: function(data) {
+                let status = data.trim().toLowerCase(); 
+                let icon = '';
+                let badgeClass = '';
+        
+                if (status === 'completed') {
+                    icon = '<i class="fa-solid fa-check-circle me-1"></i>';
+                    badgeClass = 'bg-success text-white';
+                } else if (status === 'in_progress') {
+                    icon = '<i class="fa-solid fa-spinner me-1"></i>';
+                    badgeClass = 'bg-info text-white';
+                } else {
+                    icon = '<i class="fa-solid fa-xmark-circle me-1"></i>';
+                    badgeClass = 'bg-danger text-white';
+                }
+        
+                return `<span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill ${badgeClass}" style="min-width: 100px; font-size: 0.8rem;">
+                            ${icon}${data}
+                        </span>`;
+            }
+        },
         { data: 'action', name: 'action', orderable: false, searchable: false }
     ]
 });
@@ -227,7 +273,7 @@ $('#tasks-table').DataTable({
 $(document).on('click', '.deletetask', function (e) 
 {
         e.preventDefault();
-        let userId = $(this).data('id');
+        let taskId = $(this).data('id');
         Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -239,7 +285,7 @@ $(document).on('click', '.deletetask', function (e)
         }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `task/deletetask/${userId}`, // URL for the DELETE request
+                url: `task/deletetask/${taskId}`, // URL for the DELETE request
                 type : 'DELETE',
                 data: {
                     _method: 'DELETE',

@@ -9,14 +9,64 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    @vite(['resources/css/app.css', 'resources/js/task.js', 'resources/js/user.js'])
+    @vite(['resources/css/app.css', 'resources/js/task.js', 'resources/js/user.js', 'resources/js/teams.js','resources/js/project.js'])
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         var taskRoute = "{{ route('task', ['status' => '']) }}";
     </script>
     <style>
-      
+      #chat-window {
+      width: 350px;
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    #chat-header {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+    }
+    #chat-header h3 {
+      margin: 0;
+    }
+    #chat-close {
+      cursor: pointer;
+      font-size: 18px;
+    }
+    #chat-messages {
+      height: 300px;
+      overflow-y: auto;
+      padding: 16px;
+      border-bottom: 1px solid #ccc;
+    }
+    #chat-input-container {
+      display: flex;
+      padding: 12px;
+      background-color: #f9f9f9;
+    }
+    #chat-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    #chat-send {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+    #chat-send:hover {
+      background-color: #0056b3;
+    }
     </style>
 </head>
 <body data-theme="{{ session('theme', 'light') }}">
@@ -39,15 +89,16 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{route('team')}}" title="Team">
+                    <i class="fas fa-users"></i> <span class="d-none d-md-inline">Team</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('project') }}" title="Projects">
                     <i class="fas fa-project-diagram"></i> <span class="d-none d-md-inline">Projects</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('teams')}}" title="Team">
-                    <i class="fas fa-users"></i> <span class="d-none d-md-inline">Team</span>
-                </a>
-            </li>
+           
             <li class="nav-item">
                 <a class="nav-link" href="{{route('time-track')}}" title="Time Tracking">
                     <i class="fas fa-clock"></i> <span class="d-none d-md-inline">Time Tracking</span>
@@ -134,14 +185,19 @@
         <div id="chat-icon" onclick="toggleChat()">
             <img src="{{ asset('images/chat.jpg') }}" alt="Chat Icon" width="75" height="50">
             <span id="chat-tooltip">Chat with Team</span>
-
         </div>
 
         <div id="chat-window">
+            <div id="chat-header">
+              <h3>Chat</h3>
+              <span id="chat-close" onclick="closeChat()">&times;</span>
+            </div>
             <div id="chat-messages"></div>
-            <input type="text" id="chat-input" placeholder="Type a message..." />
-            <button id="chat-send" onclick="sendMessage()">Send</button>
-        </div>
+            <div id="chat-input-container">
+              <input type="text" id="chat-input" placeholder="Type a message..." />
+              <button id="chat-send" onclick="sendMessage()">Send</button>
+            </div>
+          </div>
         <!-- Footer -->
         <footer class="footer mt-auto py-3 bg-light">
             <div class="container text-center">
@@ -174,33 +230,7 @@
         $(document).ready(function() {
             $('[title]').tooltip();
 
-            //view of projects datatable....
-            $('#project-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('project') }}',
-                    data: function(d) {}
-                },
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'name', name: 'name' },
-                    { data: 'project_manager', name: 'project_manager' },
-                    { data: 'assigned_team', name: 'assigned_team' },
-
-                    { data: 'start_date', name: 'start_date' },
-                    { data: 'end_date', name: 'end_date' },
-                    { data: 'priority', name: 'priority' },
-                    { data: 'status', name: 'status' ,
-                        render: function(data,type,row){
-                            let badgeClass = (data === 'active')?"bg-green-500 text-white" : "bg-red-500 text-white";
-                            return `<span class="px-3 py-1 rounded-full ${badgeClass}">${data}</span>`;
-                        }
-                    },
-
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
-                ]
-            });  
+           
         });
         //Calender view...
         document.addEventListener('DOMContentLoaded', function() 
@@ -256,7 +286,37 @@
         
     
 
-            
+   
+ function showTooltip() {
+     document.getElementById("chat-tooltip").style.display = "block";
+ }
+
+    function hideTooltip() {
+     document.getElementById("chat-tooltip").style.display = "none";
+    }
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const message = input.value.trim();
+      if (message === '') return;
+      const chatMessages = document.getElementById('chat-messages');
+      const messageDiv = document.createElement('div');
+      messageDiv.textContent = message;
+      messageDiv.style.marginBottom = '10px';
+      messageDiv.style.padding = '10px';
+      messageDiv.style.backgroundColor = '#e1f5fe';
+      messageDiv.style.borderRadius = '8px';
+      chatMessages.appendChild(messageDiv);
+      input.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function closeChat() {
+      document.getElementById('chat-window').style.display = 'none';
+    } 
+    function toggleChat() {
+       var chatWindow = document.getElementById("chat-window");
+       chatWindow.classList.toggle("open");
+    }    
     </script>
     
 </body>

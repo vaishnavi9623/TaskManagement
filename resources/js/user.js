@@ -91,9 +91,22 @@ $('#users-table').DataTable({
         { 
             data: 'status', 
             name: 'status',
-            render: function (data) {
-                let badgeClass = data.toLowerCase() === 'active' ? "bg-success text-white rounded-circle" : "bg-danger text-white rounded-circle";
-                return `<span class="px-3 py-1 rounded-full ${badgeClass}">${data}</span>`;
+            render: function(data) {
+                let status = data.trim().toLowerCase(); 
+                let icon = '';
+                let badgeClass = '';
+        
+                if (status === 'active') {
+                    icon = '<i class="fa-solid fa-circle-check me-1"></i>'; // ✅ green check circle
+                    badgeClass = 'bg-success text-white';
+                 } else {
+                    icon = '<i class="fa-solid fa-circle-xmark me-1"></i>'; // ❌ red cross circle
+                    badgeClass = 'bg-secondary text-white';
+                }
+        
+                return `<span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill ${badgeClass}" style="min-width: 100px; font-size: 0.8rem;">
+                            ${icon}${data}
+                        </span>`;
             }
         },
         { data: 'action', name: 'action', orderable: false, searchable: false }
@@ -161,15 +174,3 @@ $("#resetFilters").click(function () {
     $("#Userfilter-form input").val("");
     $("#users-table tbody tr").show();
 });
-
- function toggleChat() {
-     var chatWindow = document.getElementById("chat-window");
-     chatWindow.classList.toggle("open");
- }
- function showTooltip() {
-     document.getElementById("chat-tooltip").style.display = "block";
- }
-
- function hideTooltip() {
-     ocument.getElementById("chat-tooltip").style.display = "none";
- }

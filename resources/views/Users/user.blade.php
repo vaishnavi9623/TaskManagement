@@ -65,7 +65,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-4">                
+
                 <p>Loading...</p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -83,6 +86,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-4">                
+
                 <form id="updatePasswordForm" method="POST" action="#" data-id="">
                     
                     {{-- <div class="mb-3">
@@ -100,12 +105,14 @@
                         <small id="passwordMatchMessage" class="form-text"></small>
                     </div>
                 
-            </div>
+           
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Update Password</button>
+                {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
+                <button type="submit" class="btn text-light" style="background-color:#4dbfba;">Update Password</button>
             </div>
         </form>
+            </div>
+        </div>
         </div>
     </div>
 </div>

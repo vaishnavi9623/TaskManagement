@@ -30,5 +30,12 @@ class Project extends Model
         'project_code',
     ];
 
-
+    public function projectManager()
+    {
+        return $this->belongsTo(User::class, 'project_manager');
+    }
+    public function team()
+{
+    return $this->belongsTo(Team::class, 'assigned_team');
+}
 }

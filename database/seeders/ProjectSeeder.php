@@ -25,8 +25,8 @@ class ProjectSeeder extends Seeder
                 'priority' => $faker->randomElement(['low', 'medium', 'high']),
                 'client_name' => $faker->company,
                 'client_contact' => $faker->phoneNumber,
-                'project_manager' => $faker->name,
-                'assigned_team' => $faker->word,
+                'project_manager' => $faker->numberBetween(1, 4), // valid ID between 1-4
+                'assigned_team' => $faker->numberBetween(1, 4),   // valid ID between 1-4
                 'budget' => $faker->numberBetween(10000, 100000),
                 'notes' => $faker->paragraph,
                
